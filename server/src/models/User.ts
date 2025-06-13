@@ -1,16 +1,14 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-// Define an interface for the User document
 interface IUser extends Document {
   username: string;
   email: string;
   password: string;
-  thoughts: Schema.Types.ObjectId[];
+  // thoughts: Schema.Types.ObjectId[];
   isCorrectPassword(password: string): Promise<boolean>;
 }
 
-// Define the schema for the User document
 const userSchema = new Schema<IUser>(
   {
     username: {
@@ -28,14 +26,14 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
-      minlength: 5,
+      minlength: 8,
     },
-    thoughts: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Thought',
-      },
-    ],
+    // thoughts: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Thought',
+    //   },
+    // ],
   },
   {
     timestamps: true,
