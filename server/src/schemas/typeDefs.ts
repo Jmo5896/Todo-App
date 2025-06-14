@@ -4,6 +4,13 @@ const typeDefs = `
     username: String
     email: String
     password: String
+    todos: [Todo]
+  }
+
+  type Todo {
+  _id: ID
+  task: String
+  completed: Boolean
   }
 
   input UserInput {

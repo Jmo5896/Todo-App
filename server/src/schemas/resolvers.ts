@@ -1,7 +1,9 @@
-import { User } from '../models/index.js';
+import {
+  User,
+  // Todo 
+} from '../models/index.js';
 import { signToken, AuthenticationError } from '../utils/auth.js';
 
-// Define types for the arguments
 interface AddUserArgs {
   input: {
     username: string;
@@ -20,7 +22,7 @@ const resolvers = {
   Query: {
     me: async (_parent: any, _args: any, context: any) => {
       if (context.user) {
-        return User.findOne({ _id: context.user._id })
+        return User.findOne({ _id: context.user._id }).populate('todos')
       }
       throw new AuthenticationError('Could not authenticate user.');
     },
