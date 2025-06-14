@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 
 interface ITodo extends Document {
     task: string;
-    completed: boolean;
+    completed: number;
 }
 
 const todoSchema = new Schema<ITodo>(
@@ -13,10 +13,12 @@ const todoSchema = new Schema<ITodo>(
             trim: true,
             minLength: [1, "Don't make a blank task."]
         },
+        // 0 = incomplete, 1 = pending, 2 = complete
         completed: {
-            type: Boolean,
+            type: Number,
             required: false,
-            default: false
+            default: 0,
+            max: 2
         }
 
     },
