@@ -1,9 +1,9 @@
 import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
 import { useEffect, useState, type MouseEvent } from 'react';
-import Auth from '../../utils/auth';
+import Auth from '../utils/auth';
+import type { tabs } from '../utils/interfaces';
 
-type tabs = '/' | '/login' | '/signup';
 
 export default function Header() {
     const [currentTab, setCurrentTab] = useState<tabs>('/')
