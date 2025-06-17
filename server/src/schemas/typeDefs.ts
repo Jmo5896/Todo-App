@@ -10,7 +10,7 @@ const typeDefs = `
   type Todo {
   _id: ID
   task: String
-  completed: Number
+  completed: Int
   }
 
   input UserInput {
