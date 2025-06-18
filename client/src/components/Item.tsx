@@ -1,11 +1,10 @@
 import Card from 'react-bootstrap/Card';
-import type { User } from '../utils/interfaces';
+import type { itemProps } from '../utils/interfaces';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-export default function Item(props: { item: User }) {
-    const { item } = props;
-    const { id, name, email } = item;
+export default function Item({ item, toPending, removeItem }: itemProps) {
+    const { id, task } = item;
     const {
         attributes,
         listeners,
@@ -28,7 +27,7 @@ export default function Item(props: { item: User }) {
             bg='info'
             text='light'
         >
-            <Card.Body>Employee Number: {id}, name: {name}, email: {email}. </Card.Body>
+            <Card.Body>{task}</Card.Body>
         </Card>
     )
 }
