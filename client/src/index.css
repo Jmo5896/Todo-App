@@ -1,0 +1,11 @@
+.draggable-element {
+    cursor: grab;
+}
+
+.draggable-element:active {
+    cursor: grabbing;
+}
+
+.clickable-element {
+    cursor: pointer;
+}

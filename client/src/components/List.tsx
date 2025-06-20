@@ -74,15 +74,16 @@ export default function List() {
 
     };
     return (
-        <div className="container">
+        <div className="container pt-3 pb-5">
             <DndContext
                 modifiers={[restrictToVerticalAxis]}
                 onDragEnd={handleDragEnd}
             >
 
                 <Row>
-                    <Col sm={12} md={6}>
-                        <h2>Todo List</h2>
+                    <Col className='mb-3' sm={12} md={6}>
+                        <h2 className='pb-3'>Todo List</h2>
+
                         <SortableContext id='0' items={todoData.filter((item) => item.completed === 0)}>
 
                             {
@@ -99,7 +100,7 @@ export default function List() {
                         {/* </DndContext> */}
                     </Col>
                     <Col sm={12} md={6}>
-                        <h2>Pending Tasks</h2>
+                        <h2 className='pb-3'>Pending Tasks</h2>
                         {/* <DndContext
                         modifiers={[restrictToVerticalAxis]}
                         onDragEnd={handleDragEnd}
