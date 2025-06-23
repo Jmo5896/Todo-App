@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card } from 'react-bootstrap';
 
-export default function Item({ item, toPending, removeItem }: itemProps) {
+export default function Item({ item, lBtnHandler, rBtnHandler, lBtnTxt, rBtnTxt }: itemProps) {
     const { id, task } = item;
     const {
         attributes,
@@ -32,9 +32,9 @@ export default function Item({ item, toPending, removeItem }: itemProps) {
             <Card.Body className='d-flex justify-content-between'>
                 <span>{task}</span>
                 <div className='clickable-element'>
-                    <span>✔</span>
+                    <span onClick={lBtnHandler}>{lBtnTxt}</span>
                     {' '}
-                    <span>❌</span>
+                    <span onClick={rBtnHandler}>{rBtnTxt}</span>
                 </div>
             </Card.Body>
         </Card>

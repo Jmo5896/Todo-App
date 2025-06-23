@@ -1,4 +1,6 @@
 import { UniqueIdentifier } from '@dnd-kit/core';
+import { MouseEvent } from 'react';
+
 
 export type tabs = '/' | '/login' | '/signup';
 export interface LoginForm {
@@ -16,6 +18,8 @@ export type Todo = {
 
 export interface itemProps {
     item: Todo;
-    toPending: (e: MouseEvent) => void;
-    removeItem: (e: MouseEvent) => void;
+    lBtnHandler: (e: MouseEvent<HTMLSpanElement>) => void;
+    rBtnHandler: (e: MouseEvent<HTMLSpanElement>) => void;
+    lBtnTxt: string;
+    rBtnTxt: string;
 }

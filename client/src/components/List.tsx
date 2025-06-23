@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 import Item from './Item';
 import type { Todo } from '../utils/interfaces';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
@@ -43,6 +43,7 @@ const dummyData: Todo[] = [
 export default function List() {
     const [todoData, setTodoData] = useState<Todo[]>(dummyData)
     const handleDragEnd = (e: DragEndEvent) => {
+        e.activatorEvent.stopPropagation();
         const { active, over } = e;
         console.log(e);
 
@@ -59,18 +60,30 @@ export default function List() {
 
     }
 
-    const toPending = (e: MouseEvent) => {
+    const toPending = (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();
+        e.stopPropagation();
         const currentItem = e.target;
-        console.log(currentItem);
+        console.log("toPending: ", currentItem);
 
     };
-    // const toTodo= (e: MouseEvent) => {};
-    // const toCompleted= (e: MouseEvent) => {};
-    const removeItem = (e: MouseEvent) => {
+    const toTodo = (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();
+        e.stopPropagation();
         const currentItem = e.target;
-        console.log(currentItem);
+        console.log("toTodo: ", currentItem);
+    };
+    const toCompleted = (e: MouseEvent<HTMLSpanElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentItem = e.target;
+        console.log("toCompleted: ", currentItem);
+    };
+    const removeItem = (e: MouseEvent<HTMLSpanElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentItem = e.target;
+        console.log("removeItem: ", currentItem);
 
     };
     return (
@@ -78,38 +91,42 @@ export default function List() {
             <DndContext
                 modifiers={[restrictToVerticalAxis]}
                 onDragEnd={handleDragEnd}
+                onDragStart={(e: DragEndEvent) => {
+                    e.activatorEvent.stopPropagation()
+                    console.log(e);
+                }}
             >
-
                 <Row>
                     <Col className='mb-3' sm={12} md={6}>
                         <h2 className='pb-3'>Todo List</h2>
-
                         <SortableContext id='0' items={todoData.filter((item) => item.completed === 0)}>
-
                             {
                                 todoData.filter((item) => item.completed === 0).map((item) => (
                                     <Item
                                         key={item.id}
                                         item={item}
-                                        toPending={toPending}
-                                        removeItem={removeItem}
+                                        lBtnHandler={toPending}
+                                        rBtnHandler={removeItem}
+                                        lBtnTxt='✔'
+                                        rBtnTxt='❌'
                                     />
                                 ))
                             }
                         </SortableContext>
-                        {/* </DndContext> */}
                     </Col>
                     <Col sm={12} md={6}>
                         <h2 className='pb-3'>Pending Tasks</h2>
-                        {/* <DndContext
-                        modifiers={[restrictToVerticalAxis]}
-                        onDragEnd={handleDragEnd}
-                    > */}
                         <SortableContext id='1' items={todoData.filter((item) => item.completed === 1)}>
-
                             {
                                 todoData.filter((item) => item.completed === 1).map((item) => (
-                                    <Item key={item.id} item={item} />
+                                    <Item
+                                        key={item.id}
+                                        item={item}
+                                        lBtnHandler={toTodo}
+                                        rBtnHandler={toCompleted}
+                                        lBtnTxt='↩'
+                                        rBtnTxt='✔'
+                                    />
                                 ))
                             }
                         </SortableContext>
