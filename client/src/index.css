@@ -1,11 +1,14 @@
 .draggable-element {
-    cursor: grab;
+    cursor: grab !important;
 }
 
 .draggable-element:active {
-    cursor: grabbing;
+    cursor: grabbing !important;
 }
 
 .clickable-element {
     cursor: pointer;
+    /* display: inline !important; */
+    /* position: relative !important;
+    z-index: 1 !important; */
 }

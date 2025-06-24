@@ -2,7 +2,6 @@
 import type { itemProps } from '../utils/interfaces';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Card } from 'react-bootstrap';
 
 export default function Item({ item, lBtnHandler, rBtnHandler, lBtnTxt, rBtnTxt }: itemProps) {
     const { id, task } = item;
@@ -20,23 +19,25 @@ export default function Item({ item, lBtnHandler, rBtnHandler, lBtnTxt, rBtnTxt 
     };
 
     return (
-        <Card
+        <div
             ref={setNodeRef}
-            {...attributes}
-            {...listeners}
             style={style}
-            bg='info'
-            text='light'
-            className='draggable-element'
+            // bg='info'
+            // text='light'
+            className=' shadow bg-info text-light row border border-dark rounded mb-1 p-2'
+        // className='d-flex justify-content-between'
         >
-            <Card.Body className='d-flex justify-content-between'>
-                <span>{task}</span>
-                <div className='clickable-element'>
-                    <span onClick={lBtnHandler}>{lBtnTxt}</span>
-                    {' '}
-                    <span onClick={rBtnHandler}>{rBtnTxt}</span>
-                </div>
-            </Card.Body>
-        </Card>
+            <div className='draggable-element col-10 text-start'
+                {...attributes}
+                {...listeners}
+            >
+                {task}
+            </div>
+            <div className='clickable-element col-2'>
+                <span onClick={lBtnHandler}>{lBtnTxt}</span>
+                {' '}
+                <span onClick={rBtnHandler}>{rBtnTxt}</span>
+            </div>
+        </div>
     )
 }

@@ -91,13 +91,13 @@ export default function List() {
             <DndContext
                 modifiers={[restrictToVerticalAxis]}
                 onDragEnd={handleDragEnd}
-                onDragStart={(e: DragEndEvent) => {
-                    e.activatorEvent.stopPropagation()
-                    console.log(e);
-                }}
+            // onDragStart={(e: DragEndEvent) => {
+            //     e.activatorEvent.stopPropagation()
+            //     console.log(e);
+            // }}
             >
-                <Row>
-                    <Col className='mb-3' sm={12} md={6}>
+                <Row className='gx-5'>
+                    <Col className='mb-3 text-center border border-danger rounded' sm={12} md={6}>
                         <h2 className='pb-3'>Todo List</h2>
                         <SortableContext id='0' items={todoData.filter((item) => item.completed === 0)}>
                             {
@@ -114,7 +114,7 @@ export default function List() {
                             }
                         </SortableContext>
                     </Col>
-                    <Col sm={12} md={6}>
+                    <Col className='mb-3 text-center border border-warning rounded' sm={12} md={6}>
                         <h2 className='pb-3'>Pending Tasks</h2>
                         <SortableContext id='1' items={todoData.filter((item) => item.completed === 1)}>
                             {
