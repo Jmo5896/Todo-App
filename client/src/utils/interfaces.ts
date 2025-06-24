@@ -1,5 +1,5 @@
 import { UniqueIdentifier } from '@dnd-kit/core';
-import { MouseEvent } from 'react';
+import { FormEvent, MouseEvent } from 'react';
 
 
 export type tabs = '/' | '/login' | '/signup';
@@ -27,5 +27,5 @@ export interface itemProps {
 export interface createTodoProps {
     show: boolean;
     handleClose: () => void;
-    createItem: () => void;
+    createItem: (e: FormEvent<HTMLFormElement>) => void;
 }

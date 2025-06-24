@@ -1,13 +1,14 @@
-import { useState, useEffect, MouseEvent } from 'react';
+import { useState, useEffect, MouseEvent, FormEvent } from 'react';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { Row, Col } from 'react-bootstrap';
 
 import Item from './Item';
 import type { Todo } from '../utils/interfaces';
 import { QUERY_ME } from '../utils/queries';
+import { CREATE_TODO } from '../utils/mutations';
 import CreateTodoModal from './CreateTodoModal';
 
 export default function List() {
@@ -15,9 +16,13 @@ export default function List() {
     const [show, setShow] = useState(false);
 
     const { error: meError, data: meData } = useQuery(QUERY_ME)
+    const [createTodo, { error: createTodoError }] = useMutation(CREATE_TODO);
 
     if (meError) {
         console.log(JSON.stringify(meError));
+    }
+    if (createTodoError) {
+        console.log(JSON.stringify(createTodoError));
     }
 
     const freshTodos = meData?.me.todos || [];
@@ -74,8 +79,21 @@ export default function List() {
         console.log("removeItem: ", currentItem);
 
     };
-    const createItem = () => {
-        console.log("createItem: ");
+    const createItem = async (e: FormEvent<HTMLFormElement>) => {
+        // e.preventDefault();
+        const formData = new FormData(e.target as HTMLFormElement);
+        // console.log(formData.get("task"));
+
+        try {
+            await createTodo({
+                variables: {
+                    task: formData.get("task")
+                }
+            });
+
+        } catch (err) {
+            console.error(err);
+        }
         handleClose()
     };
 
