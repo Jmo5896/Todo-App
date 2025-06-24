@@ -86,19 +86,22 @@ export default function List() {
         console.log("removeItem: ", currentItem);
 
     };
+    const createItem = (e: MouseEvent<HTMLSpanElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentItem = e.target;
+        console.log("createItem: ", currentItem);
+
+    };
     return (
         <div className="container pt-3 pb-5">
             <DndContext
                 modifiers={[restrictToVerticalAxis]}
                 onDragEnd={handleDragEnd}
-            // onDragStart={(e: DragEndEvent) => {
-            //     e.activatorEvent.stopPropagation()
-            //     console.log(e);
-            // }}
             >
                 <Row className='gx-5'>
                     <Col className='mb-3 text-center border border-danger rounded' sm={12} md={6}>
-                        <h2 className='pb-3'>Todo List</h2>
+                        <h2 className='pb-3'>Todo List <span className='btn btn-success shadow border border-dark' onClick={createItem}>➕</span></h2>
                         <SortableContext id='0' items={todoData.filter((item) => item.completed === 0)}>
                             {
                                 todoData.filter((item) => item.completed === 0).map((item) => (

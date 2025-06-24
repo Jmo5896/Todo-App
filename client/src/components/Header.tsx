@@ -7,6 +7,7 @@ import type { tabs } from '../utils/interfaces';
 
 export default function Header() {
     const [currentTab, setCurrentTab] = useState<tabs>('/')
+    const [loggedIn] = useState(() => Auth.loggedIn())
 
     const checkHref = () => {
         const currentUrl: tabs = '/' + window.location.href.split('/').at(-1) as tabs;
@@ -23,7 +24,7 @@ export default function Header() {
     return (
         <Nav variant="underline" fill={true} activeKey={currentTab}>
             {
-                Auth.loggedIn() ?
+                loggedIn ?
                     (<>
                         <Nav.Item onClick={checkHref}>
                             <Nav.Link as={Link} to="/" >Profile</Nav.Link>
