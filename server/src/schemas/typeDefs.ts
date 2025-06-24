@@ -9,6 +9,7 @@ const typeDefs = `
 
   type Todo {
   _id: ID
+  id: ID
   task: String
   completed: Int
   }
@@ -31,6 +32,7 @@ const typeDefs = `
   type Mutation {
     addUser(input: UserInput!): Auth
     login(email: String!, password: String!): Auth
+    createTodo(task: String!): Todo
   }
 `;
 

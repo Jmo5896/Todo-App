@@ -1,4 +1,5 @@
 import {
+  Todo,
   User,
   // Todo 
 } from '../models/index.js';
@@ -53,6 +54,20 @@ const resolvers = {
       const token = signToken(user.username, user.email, user._id);
 
       return { token, user };
+    },
+
+    createTodo: async (_parent: any, { task }: any, context: any) => {
+      if (context.user) {
+        const newItem = await Todo.create({ task });
+
+        await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { todos: newItem._id } }
+        );
+
+        return newItem;
+      }
+      throw new AuthenticationError('Could not authenticate user.');
     }
   },
 };

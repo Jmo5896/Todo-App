@@ -23,7 +23,8 @@ const todoSchema = new Schema<ITodo>(
 
     },
     {
-        timestamps: true
+        timestamps: true,
+        id: true
     }
 );
 

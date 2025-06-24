@@ -16,3 +16,12 @@ export const ADD_USER = gql`
 }
 `;
 
+export const CREATE_TODO = gql`
+mutation CreateTodo($task: String!) {
+  createTodo(task: $task) {
+    completed
+    id
+    task
+  }
+}
+`;
