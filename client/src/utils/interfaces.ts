@@ -23,3 +23,9 @@ export interface itemProps {
     lBtnTxt: string;
     rBtnTxt: string;
 }
+
+export interface createTodoProps {
+    show: boolean;
+    handleClose: () => void;
+    createItem: () => void;
+}

@@ -1,15 +1,18 @@
 import { useState, useEffect, MouseEvent } from 'react';
-import Item from './Item';
-import type { Todo } from '../utils/interfaces';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { Row, Col } from 'react-bootstrap';
 import { useQuery } from '@apollo/client';
+import { Row, Col } from 'react-bootstrap';
+
+import Item from './Item';
+import type { Todo } from '../utils/interfaces';
 import { QUERY_ME } from '../utils/queries';
+import CreateTodoModal from './CreateTodoModal';
 
 export default function List() {
     const [todoData, setTodoData] = useState<Todo[]>([])
+    const [show, setShow] = useState(false);
 
     const { error: meError, data: meData } = useQuery(QUERY_ME)
 
@@ -42,6 +45,9 @@ export default function List() {
 
     }
 
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     const toPending = (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();
         e.stopPropagation();
@@ -68,22 +74,25 @@ export default function List() {
         console.log("removeItem: ", currentItem);
 
     };
-    const createItem = (e: MouseEvent<HTMLSpanElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const currentItem = e.target;
-        console.log("createItem: ", currentItem);
-
+    const createItem = () => {
+        console.log("createItem: ");
+        handleClose()
     };
+
     return (
         <div className="container pt-3 pb-5">
+            <CreateTodoModal
+                show={show}
+                handleClose={handleClose}
+                createItem={createItem}
+            />
             <DndContext
                 modifiers={[restrictToVerticalAxis]}
                 onDragEnd={handleDragEnd}
             >
                 <Row className='gx-5'>
                     <Col className='mb-3 text-center border border-danger rounded' sm={12} md={6}>
-                        <h2 className='pb-3'>Todo List <span className='btn btn-success shadow border border-dark' onClick={createItem}>➕</span></h2>
+                        <h2 className='pb-3'>Todo List <span className='btn btn-success shadow border border-dark' onClick={handleShow}>➕</span></h2>
                         <SortableContext id='0' items={todoData.filter((item) => item.completed === 0)}>
                             {
                                 todoData.filter((item) => item.completed === 0).map((item) => (
