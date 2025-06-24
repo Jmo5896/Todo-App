@@ -1,47 +1,29 @@
-import { useState, MouseEvent } from 'react';
+import { useState, useEffect, MouseEvent } from 'react';
 import Item from './Item';
 import type { Todo } from '../utils/interfaces';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { Row, Col } from 'react-bootstrap';
-
-const dummyData: Todo[] = [
-    {
-        id: "1",
-        task: 'test task 1',
-        completed: 1
-    },
-    {
-        id: "2",
-        task: 'test task 2',
-        completed: 0
-    },
-    {
-        id: "3",
-        task: 'test task 3',
-        completed: 1
-    },
-    {
-        id: "4",
-        task: 'test task 4',
-        completed: 2
-    },
-    {
-        id: "5",
-        task: 'test task 5',
-        completed: 0
-    },
-    {
-        id: "6",
-        task: 'test task 6',
-        completed: 0
-    },
-]
-
+import { useQuery } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries';
 
 export default function List() {
-    const [todoData, setTodoData] = useState<Todo[]>(dummyData)
+    const [todoData, setTodoData] = useState<Todo[]>([])
+
+    const { error: meError, data: meData } = useQuery(QUERY_ME)
+
+    if (meError) {
+        console.log(JSON.stringify(meError));
+    }
+
+    const freshTodos = meData?.me.todos || [];
+
+    useEffect(() => {
+        setTodoData(freshTodos)
+    }, [freshTodos])
+
+
     const handleDragEnd = (e: DragEndEvent) => {
         e.activatorEvent.stopPropagation();
         const { active, over } = e;
