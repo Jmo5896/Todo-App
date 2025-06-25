@@ -52,18 +52,18 @@ export default function List() {
 
         if (over && active.id !== over.id) {
             let items = [...todoData];
-            // setTodoData(items => {
+
             const oldIndex = items.findIndex(item => item.id === active.id);
             const newIndex = items.findIndex(item => item.id === over.id);
-            items = arrayMove(items, oldIndex, newIndex);
 
-            // })
+            items = arrayMove(items, oldIndex, newIndex);
+            setTodoData(items)
             await changeTodoOrder({
                 variables: {
                     todos: items.map(obj => obj._id)
                 }
             });
-            setTodoData(items)
+
         }
 
     }
