@@ -11,6 +11,7 @@ export interface LoginForm {
 
 // TESTING THIS WILL PROBABLY NEED TO BE CHANGED
 export type Todo = {
+    _id: string;
     id: UniqueIdentifier;
     task: string;
     completed: number;

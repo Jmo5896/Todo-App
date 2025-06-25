@@ -70,20 +70,18 @@ const resolvers = {
     },
     ChangeTodoOrder: async (_parent: any, { todos }: any, context: any) => {
       if (context.user) {
-        // const currentUser = await User.findById(context.user._id)
-        console.log('todos: ', todos);
-        // console.log('currentUser: ', currentUser);
 
-        // const newItem = await Todo.create({ task });
+        if (todos.length > 0) {
 
-        const updatedOrder = await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $set: { todos } },
-          { new: true }
-        ).populate('todos');
+          const updatedOrder = await User.findOneAndUpdate(
+            { _id: context.user._id },
+            { $set: { todos } },
+            { new: true }
+          ).populate('todos');
 
-        // return newItem;
-        return updatedOrder;
+          return updatedOrder;
+        }
+        throw new Error("no order to adjust");
       }
       throw new AuthenticationError('Could not authenticate user.');
     }

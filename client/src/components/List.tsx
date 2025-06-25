@@ -8,7 +8,7 @@ import { Row, Col } from 'react-bootstrap';
 import Item from './Item';
 import type { Todo } from '../utils/interfaces';
 import { QUERY_ME } from '../utils/queries';
-import { CREATE_TODO } from '../utils/mutations';
+import { CREATE_TODO, UPDATE_TODO_ORDER } from '../utils/mutations';
 import CreateTodoModal from './CreateTodoModal';
 
 export default function List() {
@@ -17,6 +17,7 @@ export default function List() {
 
     const { error: meError, data: meData } = useQuery(QUERY_ME)
     const [createTodo, { error: createTodoError }] = useMutation(CREATE_TODO);
+    const [changeTodoOrder, { error: changeTodoOrderError }] = useMutation(UPDATE_TODO_ORDER);
 
     if (meError) {
         console.log(JSON.stringify(meError));
@@ -24,32 +25,45 @@ export default function List() {
     if (createTodoError) {
         console.log(JSON.stringify(createTodoError));
     }
+    if (changeTodoOrderError) {
+        console.log(JSON.stringify(changeTodoOrderError));
+    }
 
     const freshTodos = meData?.me.todos || [];
 
     useEffect(() => {
+        console.log("Fresh Todos Triggered!", freshTodos);
         setTodoData(freshTodos)
     }, [freshTodos])
 
-    useEffect(() => {
-        // MUTATION HERE
-    }, [todoData])
+    // useEffect(() => {
+    //     // MUTATION HERE
+    //     console.log("order Change Triggered!");
 
 
-    const handleDragEnd = (e: DragEndEvent) => {
+    // }, [todoData])
+
+
+    const handleDragEnd = async (e: DragEndEvent) => {
         e.activatorEvent.stopPropagation();
         const { active, over } = e;
         console.log(e);
 
 
         if (over && active.id !== over.id) {
-            setTodoData(items => {
-                const oldIndex = items.findIndex(item => item.id === active.id);
-                const newIndex = items.findIndex(item => item.id === over.id);
+            let items = [...todoData];
+            // setTodoData(items => {
+            const oldIndex = items.findIndex(item => item.id === active.id);
+            const newIndex = items.findIndex(item => item.id === over.id);
+            items = arrayMove(items, oldIndex, newIndex);
 
-                return arrayMove(items, oldIndex, newIndex);
-
-            })
+            // })
+            await changeTodoOrder({
+                variables: {
+                    todos: items.map(obj => obj._id)
+                }
+            });
+            setTodoData(items)
         }
 
     }

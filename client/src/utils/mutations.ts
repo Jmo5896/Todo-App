@@ -25,3 +25,17 @@ mutation CreateTodo($task: String!) {
   }
 }
 `;
+
+export const UPDATE_TODO_ORDER = gql`
+mutation ChangeTodoOrder($todos: [ID]) {
+  ChangeTodoOrder(todos: $todos) {
+    email
+    todos {
+      _id
+      id
+      task
+      completed
+    }
+  }
+}
+`;
