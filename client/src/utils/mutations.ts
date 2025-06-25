@@ -44,3 +44,16 @@ mutation ToPending($todoId: ID) {
   }
 }
 `;
+
+export const UNDO_PENDING = gql`
+mutation UndoPending($todoId: ID) {
+  undoPending(todoId: $todoId) {
+    todos {
+      _id
+      id
+      task
+      completed
+    }
+  }
+}
+`;

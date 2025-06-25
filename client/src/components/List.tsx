@@ -8,7 +8,7 @@ import { Row, Col } from 'react-bootstrap';
 import Item from './Item';
 import type { Todo } from '../utils/interfaces';
 import { QUERY_ME } from '../utils/queries';
-import { CREATE_TODO, UPDATE_TODO_ORDER, TO_PENDING } from '../utils/mutations';
+import { CREATE_TODO, UPDATE_TODO_ORDER, TO_PENDING, UNDO_PENDING } from '../utils/mutations';
 import CreateTodoModal from './CreateTodoModal';
 
 export default function List() {
@@ -19,6 +19,7 @@ export default function List() {
     const [createTodo, { error: createTodoError }] = useMutation(CREATE_TODO);
     const [changeTodoOrder, { error: changeTodoOrderError }] = useMutation(UPDATE_TODO_ORDER);
     const [toPendingMutation, { error: toPendingError }] = useMutation(TO_PENDING);
+    const [undoPendingMutation, { error: undoPendingError }] = useMutation(UNDO_PENDING);
 
     if (meError) {
         console.log(JSON.stringify(meError));
@@ -31,6 +32,9 @@ export default function List() {
     }
     if (toPendingError) {
         console.log(JSON.stringify(toPendingError));
+    }
+    if (undoPendingError) {
+        console.log(JSON.stringify(undoPendingError));
     }
 
     const freshTodos = meData?.me.todos || [];
@@ -70,7 +74,6 @@ export default function List() {
         e.preventDefault();
         e.stopPropagation();
         const currentItem: any = e.target;
-        // console.log("toPending: ", currentItem.dataset.id);
         try {
             const updatedTodos = await toPendingMutation({
                 variables: {
@@ -83,11 +86,21 @@ export default function List() {
             console.error(err);
         }
     };
-    const toTodo = (e: MouseEvent<HTMLSpanElement>) => {
+    const toTodo = async (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        const currentItem = e.target;
-        console.log("toTodo: ", currentItem);
+        const currentItem: any = e.target;
+        try {
+            const updatedTodos = await undoPendingMutation({
+                variables: {
+                    todoId: currentItem.dataset.id
+                }
+            })
+            setTodoData(updatedTodos.data.undoPending.todos)
+
+        } catch (err) {
+            console.error(err);
+        }
     };
     const toCompleted = (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();

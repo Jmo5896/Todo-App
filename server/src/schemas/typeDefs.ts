@@ -35,6 +35,7 @@ const typeDefs = `
     createTodo(task: String!): Todo
     changeTodoOrder(todos: [ID]): String
     toPending(todoId: ID): User
+    undoPending(todoId: ID): User
   }
 `;
 

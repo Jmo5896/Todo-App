@@ -95,7 +95,19 @@ const resolvers = {
         return await User.findOne({ _id: context.user._id }).populate('todos');
       }
       throw new AuthenticationError('Could not authenticate user.');
-    }
+    },
+    undoPending: async (_parent: any, { todoId }: any, context: any) => {
+      if (context.user) {
+
+        await Todo.findOneAndUpdate(
+          { _id: todoId },
+          { completed: 0 }
+        )
+
+        return await User.findOne({ _id: context.user._id }).populate('todos');
+      }
+      throw new AuthenticationError('Could not authenticate user.');
+    },
   },
 };
 
