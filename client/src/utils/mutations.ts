@@ -31,3 +31,16 @@ mutation ChangeTodoOrder($todos: [ID]) {
   changeTodoOrder(todos: $todos)
 }
 `;
+
+export const TO_PENDING = gql`
+mutation ToPending($todoId: ID) {
+  toPending(todoId: $todoId) {
+    todos {
+      _id
+      id
+      task
+      completed
+    }
+  }
+}
+`;

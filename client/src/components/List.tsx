@@ -8,7 +8,7 @@ import { Row, Col } from 'react-bootstrap';
 import Item from './Item';
 import type { Todo } from '../utils/interfaces';
 import { QUERY_ME } from '../utils/queries';
-import { CREATE_TODO, UPDATE_TODO_ORDER } from '../utils/mutations';
+import { CREATE_TODO, UPDATE_TODO_ORDER, TO_PENDING } from '../utils/mutations';
 import CreateTodoModal from './CreateTodoModal';
 
 export default function List() {
@@ -18,6 +18,7 @@ export default function List() {
     const { error: meError, data: meData } = useQuery(QUERY_ME)
     const [createTodo, { error: createTodoError }] = useMutation(CREATE_TODO);
     const [changeTodoOrder, { error: changeTodoOrderError }] = useMutation(UPDATE_TODO_ORDER);
+    const [toPendingMutation, { error: toPendingError }] = useMutation(TO_PENDING);
 
     if (meError) {
         console.log(JSON.stringify(meError));
@@ -28,27 +29,19 @@ export default function List() {
     if (changeTodoOrderError) {
         console.log(JSON.stringify(changeTodoOrderError));
     }
+    if (toPendingError) {
+        console.log(JSON.stringify(toPendingError));
+    }
 
     const freshTodos = meData?.me.todos || [];
 
     useEffect(() => {
-        // console.log("Fresh Todos Triggered!", freshTodos);
         setTodoData(freshTodos)
     }, [freshTodos])
-
-    // useEffect(() => {
-    //     // MUTATION HERE
-    //     console.log("order Change Triggered!");
-
-
-    // }, [todoData])
-
 
     const handleDragEnd = async (e: DragEndEvent) => {
         e.activatorEvent.stopPropagation();
         const { active, over } = e;
-        // console.log(e);
-
 
         if (over && active.id !== over.id) {
             let items = [...todoData];
@@ -58,25 +51,37 @@ export default function List() {
 
             items = arrayMove(items, oldIndex, newIndex);
             setTodoData(items)
-            await changeTodoOrder({
-                variables: {
-                    todos: items.map(obj => obj._id)
-                }
-            });
-
+            try {
+                await changeTodoOrder({
+                    variables: {
+                        todos: items.map(obj => obj._id)
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+            }
         }
-
     }
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const toPending = (e: MouseEvent<HTMLSpanElement>) => {
+    const toPending = async (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        const currentItem = e.target;
-        console.log("toPending: ", currentItem);
+        const currentItem: any = e.target;
+        // console.log("toPending: ", currentItem.dataset.id);
+        try {
+            const updatedTodos = await toPendingMutation({
+                variables: {
+                    todoId: currentItem.dataset.id
+                }
+            })
+            setTodoData(updatedTodos.data.toPending.todos)
 
+        } catch (err) {
+            console.error(err);
+        }
     };
     const toTodo = (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();

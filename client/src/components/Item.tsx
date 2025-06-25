@@ -34,9 +34,9 @@ export default function Item({ item, lBtnHandler, rBtnHandler, lBtnTxt, rBtnTxt 
                 {task}
             </div>
             <div className='clickable-element col-2'>
-                <span onClick={lBtnHandler}>{lBtnTxt}</span>
+                <span data-id={item._id} onClick={lBtnHandler}>{lBtnTxt}</span>
                 {' '}
-                <span onClick={rBtnHandler}>{rBtnTxt}</span>
+                <span data-id={item._id} onClick={rBtnHandler}>{rBtnTxt}</span>
             </div>
         </div>
     )

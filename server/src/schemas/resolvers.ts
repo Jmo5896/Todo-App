@@ -75,13 +75,24 @@ const resolvers = {
 
           await User.findOneAndUpdate(
             { _id: context.user._id },
-            { $set: { todos } },
-            { new: true }
-          ).populate('todos');
+            { $set: { todos } }
+          );
 
           return "order was updated!";
         }
         throw new Error("no order to adjust");
+      }
+      throw new AuthenticationError('Could not authenticate user.');
+    },
+    toPending: async (_parent: any, { todoId }: any, context: any) => {
+      if (context.user) {
+
+        await Todo.findOneAndUpdate(
+          { _id: todoId },
+          { completed: 1 }
+        )
+
+        return await User.findOne({ _id: context.user._id }).populate('todos');
       }
       throw new AuthenticationError('Could not authenticate user.');
     }
