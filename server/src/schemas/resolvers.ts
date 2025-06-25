@@ -1,7 +1,6 @@
 import {
   Todo,
   User,
-  // Todo 
 } from '../models/index.js';
 import { signToken, AuthenticationError } from '../utils/auth.js';
 
@@ -66,6 +65,25 @@ const resolvers = {
         );
 
         return newItem;
+      }
+      throw new AuthenticationError('Could not authenticate user.');
+    },
+    ChangeTodoOrder: async (_parent: any, { todos }: any, context: any) => {
+      if (context.user) {
+        // const currentUser = await User.findById(context.user._id)
+        console.log('todos: ', todos);
+        // console.log('currentUser: ', currentUser);
+
+        // const newItem = await Todo.create({ task });
+
+        const updatedOrder = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $set: { todos } },
+          { new: true }
+        ).populate('todos');
+
+        // return newItem;
+        return updatedOrder;
       }
       throw new AuthenticationError('Could not authenticate user.');
     }

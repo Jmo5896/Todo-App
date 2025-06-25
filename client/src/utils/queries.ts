@@ -7,6 +7,7 @@ export const QUERY_ME = gql`
     todos {
       completed
       id
+      _id
       task
     }
     username

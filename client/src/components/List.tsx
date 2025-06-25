@@ -31,6 +31,10 @@ export default function List() {
         setTodoData(freshTodos)
     }, [freshTodos])
 
+    useEffect(() => {
+        // MUTATION HERE
+    }, [todoData])
+
 
     const handleDragEnd = (e: DragEndEvent) => {
         e.activatorEvent.stopPropagation();
