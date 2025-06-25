@@ -33,7 +33,7 @@ const typeDefs = `
     addUser(input: UserInput!): Auth
     login(email: String!, password: String!): Auth
     createTodo(task: String!): Todo
-    ChangeTodoOrder(todos: [ID]): User
+    changeTodoOrder(todos: [ID]): String
   }
 `;
 

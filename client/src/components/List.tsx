@@ -32,7 +32,7 @@ export default function List() {
     const freshTodos = meData?.me.todos || [];
 
     useEffect(() => {
-        console.log("Fresh Todos Triggered!", freshTodos);
+        // console.log("Fresh Todos Triggered!", freshTodos);
         setTodoData(freshTodos)
     }, [freshTodos])
 
@@ -47,7 +47,7 @@ export default function List() {
     const handleDragEnd = async (e: DragEndEvent) => {
         e.activatorEvent.stopPropagation();
         const { active, over } = e;
-        console.log(e);
+        // console.log(e);
 
 
         if (over && active.id !== over.id) {

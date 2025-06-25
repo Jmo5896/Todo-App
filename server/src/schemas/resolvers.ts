@@ -68,18 +68,18 @@ const resolvers = {
       }
       throw new AuthenticationError('Could not authenticate user.');
     },
-    ChangeTodoOrder: async (_parent: any, { todos }: any, context: any) => {
+    changeTodoOrder: async (_parent: any, { todos }: any, context: any) => {
       if (context.user) {
 
         if (todos.length > 0) {
 
-          const updatedOrder = await User.findOneAndUpdate(
+          await User.findOneAndUpdate(
             { _id: context.user._id },
             { $set: { todos } },
             { new: true }
           ).populate('todos');
 
-          return updatedOrder;
+          return "order was updated!";
         }
         throw new Error("no order to adjust");
       }
