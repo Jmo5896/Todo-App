@@ -8,8 +8,9 @@ import { Row, Col } from 'react-bootstrap';
 import Item from './Item';
 import type { Todo } from '../utils/interfaces';
 import { QUERY_ME } from '../utils/queries';
-import { CREATE_TODO, UPDATE_TODO_ORDER, TO_PENDING, UNDO_PENDING } from '../utils/mutations';
+import { CREATE_TODO, UPDATE_TODO_ORDER, TO_PENDING, UNDO_PENDING, COMPLETE_TASK } from '../utils/mutations';
 import CreateTodoModal from './CreateTodoModal';
+import auth from '../utils/auth';
 
 export default function List() {
     const [todoData, setTodoData] = useState<Todo[]>([])
@@ -20,6 +21,7 @@ export default function List() {
     const [changeTodoOrder, { error: changeTodoOrderError }] = useMutation(UPDATE_TODO_ORDER);
     const [toPendingMutation, { error: toPendingError }] = useMutation(TO_PENDING);
     const [undoPendingMutation, { error: undoPendingError }] = useMutation(UNDO_PENDING);
+    const [completeTaskMutation, { error: completeTaskError }] = useMutation(COMPLETE_TASK);
 
     if (meError) {
         console.log(JSON.stringify(meError));
@@ -36,11 +38,15 @@ export default function List() {
     if (undoPendingError) {
         console.log(JSON.stringify(undoPendingError));
     }
+    if (completeTaskError) {
+        console.log(JSON.stringify(completeTaskError));
+    }
 
     const freshTodos = meData?.me.todos || [];
 
     useEffect(() => {
         setTodoData(freshTodos)
+        !auth.loggedIn() && window.location.assign('/login')
     }, [freshTodos])
 
     const handleDragEnd = async (e: DragEndEvent) => {
@@ -102,11 +108,21 @@ export default function List() {
             console.error(err);
         }
     };
-    const toCompleted = (e: MouseEvent<HTMLSpanElement>) => {
+    const toCompleted = async (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        const currentItem = e.target;
-        console.log("toCompleted: ", currentItem);
+        const currentItem: any = e.target;
+        try {
+            const updatedTodos = await completeTaskMutation({
+                variables: {
+                    todoId: currentItem.dataset.id
+                }
+            })
+            setTodoData(updatedTodos.data.completeTask.todos)
+
+        } catch (err) {
+            console.error(err);
+        }
     };
     const removeItem = (e: MouseEvent<HTMLSpanElement>) => {
         e.preventDefault();

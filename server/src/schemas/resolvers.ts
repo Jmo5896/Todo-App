@@ -108,6 +108,18 @@ const resolvers = {
       }
       throw new AuthenticationError('Could not authenticate user.');
     },
+    completeTask: async (_parent: any, { todoId }: any, context: any) => {
+      if (context.user) {
+
+        await Todo.findOneAndUpdate(
+          { _id: todoId },
+          { completed: 2 }
+        )
+
+        return await User.findOne({ _id: context.user._id }).populate('todos');
+      }
+      throw new AuthenticationError('Could not authenticate user.');
+    },
   },
 };
 

@@ -36,6 +36,7 @@ const typeDefs = `
     changeTodoOrder(todos: [ID]): String
     toPending(todoId: ID): User
     undoPending(todoId: ID): User
+    completeTask(todoId: ID): User
   }
 `;
 
