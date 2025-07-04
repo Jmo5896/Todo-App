@@ -4,6 +4,7 @@ import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useQuery, useMutation } from '@apollo/client';
 import { Row, Col } from 'react-bootstrap';
+import ConfettiExplosion from 'react-confetti-explosion';
 
 import Item from './Item';
 import type { Todo } from '../utils/interfaces';
@@ -15,6 +16,7 @@ import auth from '../utils/auth';
 export default function List() {
     const [todoData, setTodoData] = useState<Todo[]>([])
     const [show, setShow] = useState(false);
+    const [isExploding, setIsExploding] = useState(false);
 
     const { error: meError, data: meData } = useQuery(QUERY_ME)
     const [createTodo, { error: createTodoError }] = useMutation(CREATE_TODO);
@@ -119,7 +121,8 @@ export default function List() {
                 }
             })
             setTodoData(updatedTodos.data.completeTask.todos)
-
+            setIsExploding(true);
+            setTimeout(() => setIsExploding(false), 3000)
         } catch (err) {
             console.error(err);
         }
@@ -151,6 +154,7 @@ export default function List() {
 
     return (
         <div className="container pt-3 pb-5">
+
             <CreateTodoModal
                 show={show}
                 handleClose={handleClose}
@@ -179,7 +183,7 @@ export default function List() {
                         </SortableContext>
                     </Col>
                     <Col className='mb-3 text-center border border-warning rounded' sm={12} md={6}>
-                        <h2 className='pb-3'>Pending Tasks</h2>
+                        <h2 className='pb-3'>Tasks Started</h2>
                         <SortableContext id='1' items={todoData.filter((item) => item.completed === 1)}>
                             {
                                 todoData.filter((item) => item.completed === 1).map((item) => (
@@ -196,6 +200,34 @@ export default function List() {
                         </SortableContext>
                     </Col>
                 </Row>
+                {isExploding &&
+                    <Row className='g-5'>
+                        <Col>
+                            <ConfettiExplosion
+                                force={.8}
+                                duration={3000}
+                                particleCount={250}
+                                width={1600}
+                            />
+                        </Col>
+                        <Col>
+                            <ConfettiExplosion
+                                force={.8}
+                                duration={3000}
+                                particleCount={250}
+                                width={1600}
+                            />
+                        </Col>
+                        <Col>
+                            <ConfettiExplosion
+                                force={.8}
+                                duration={3000}
+                                particleCount={250}
+                                width={1600}
+                            />
+                        </Col>
+                    </Row>
+                }
             </DndContext>
         </div>
     )
